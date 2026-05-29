@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('S3 Object List', ~{::content})}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Blob Object List', ~{::content})}">
 <body>
     <div th:fragment="content">
         <h2>Your Images</h2>
@@ -28,7 +28,7 @@
         </div>
 
         <div class="alert alert-info" th:if="${#lists.isEmpty(objects)}">
-            No images found in the S3 bucket. <a th:href="@{/storage/upload}" class="alert-link">Upload your first image!</a>
+            No images found in the blob container. <a th:href="@{/storage/upload}" class="alert-link">Upload your first image!</a>
         </div>
 
         <!-- Loading indicator for auto-refreshing -->

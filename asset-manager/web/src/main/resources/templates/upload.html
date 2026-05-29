@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Upload to S3', ~{::content})}">
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: layout('Upload to Blob Storage', ~{::content})}">
 <body>
     <div th:fragment="content">
-        <h2>Upload Image to S3</h2>
+        <h2>Upload Image to Blob Storage</h2>
         
         <form th:action="@{/storage/upload}" method="post" enctype="multipart/form-data" class="mt-4" id="uploadForm">
             <div class="mb-3">

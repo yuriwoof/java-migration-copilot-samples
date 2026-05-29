@@ -15,16 +15,16 @@ Here is the list of some prompts used during the project creation, for your refe
 ```markdown
 I have a blank Java project created from Spring Initializer, with the spring-web and thymeleaf dependency.
 
-I want to build a web based AWS S3 client, that allows me to upload pictures to S3 buckets, list all the pictures, view a given picture, and delete pictures from S3 buckets.
+I want to build a web based Azure Blob Storage client, that allows me to upload pictures to blob containers, list all the pictures, view a given picture, and delete pictures from blob containers.
 
-Please generate the frontend UI using Thymeleaf templates and the backend web server that actually talks to S3 buckets when it receives the request from the frontend.
+Please generate the frontend UI using Thymeleaf templates and the backend web server that actually talks to blob containers when it receives the request from the frontend.
 ```
 ---
 
 ```
-I don't have an AWS S3 account. I want to try all the application logic locally except for the actual communication with AWS S3.
+I don't have an Azure Blob Storage account. I want to try all the application logic locally except for the actual communication with Azure Blob Storage.
 
-Extract the APIs of `S3Service` to a interface, generate another service implementation of this interface based on local files. Use profiles `dev` to register this service instead of the actual S3 one, so that I can test the app with profile `dev`.
+Extract the APIs of `BlobStorageService` to a interface, generate another service implementation of this interface based on local files. Use profiles `dev` to register this service instead of the actual blob storage one, so that I can test the app with profile `dev`.
 ```
 ---
 
@@ -78,7 +78,7 @@ I see the following warning when I compile the top level parent project, please 
 ---
 
 ```
-I need to use a queue in RabbitMQ to connect the web module and the worker module. When an image is uploaded from the web project, a message containing the image properties is sent to the queue. The worker listen to the queue, and when it receives the message properties from the queue, it creates a thumbnail image with width and height no more than 150px, the aspect ratio need to be the same as the original image. The thumbnail is then stored in the same location, local dir or a separate bucket, with a `_thumbnail` suffix in the file name.
+I need to use a queue in RabbitMQ to connect the web module and the worker module. When an image is uploaded from the web project, a message containing the image properties is sent to the queue. The worker listen to the queue, and when it receives the message properties from the queue, it creates a thumbnail image with width and height no more than 150px, the aspect ratio need to be the same as the original image. The thumbnail is then stored in the same location, local dir or a separate container, with a `_thumbnail` suffix in the file name.
 ```
 
 Copilot Agent incorrectly adds the dependency version configuration for AMQP in the parent pom's dependencyManagement section, which leads to compilation error. I manually removed it.
@@ -86,11 +86,11 @@ Copilot Agent incorrectly adds the dependency version configuration for AMQP in 
 ---
 
 ```
-Just like the web project that supports falling back to local storage when running in `dev` profile, the `FileProcessingService` should also be aware of local storage. Extract the key methods in `FileProcessingService` to a interface, and add another service implementation that processes the files from the local file storage, when the dev profile is activated. Create abstract parent class if necessary to ensure reusing common logics for different service implementation. Ensure the message in the message queue has enough information to identify if the file is from prod S3 or dev local storage.
+Just like the web project that supports falling back to local storage when running in `dev` profile, the `FileProcessingService` should also be aware of local storage. Extract the key methods in `FileProcessingService` to a interface, and add another service implementation that processes the files from the local file storage, when the dev profile is activated. Create abstract parent class if necessary to ensure reusing common logics for different service implementation. Ensure the message in the message queue has enough information to identify if the file is from production blob storage or dev local storage.
 ```
 ---
 ```
-Is `FileProcessingService` still needed, given in previous step it was refactored to two different implementation: s3 for prod and local file for dev?
+Is `FileProcessingService` still needed, given in previous step it was refactored to two different implementation: blob storage for prod and local file for dev?
 ```
 ---
 

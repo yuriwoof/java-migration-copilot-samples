@@ -3,7 +3,7 @@
 This document serves as a comprehensive workshop guide that will walk you through the process of migrating a Java application to Azure using GitHub Copilot app modernization. The workshop covers assessment, Java/framework upgrades, migration to Azure services, containerization, and deployment.
 
 **What the modernization Process Will Do:**
-The modernization will transform your application from the outdated technologies to a modern Azure-native solution. This includes upgrading from Java 8 to Java 21, migrating from Spring Boot 2.x to 3.x, replacing AWS S3 with Azure Blob Storage, switching from RabbitMQ to Azure Service Bus, migrating to Azure Database for PostgreSQL, implementing managed identity authentication, adding health checks, containerizing the applications, and preparing them for cloud deployment with proper monitoring.
+The modernization will transform your application from the outdated technologies to a modern Azure-native solution. This includes upgrading from Java 8 to Java 21, migrating from Spring Boot 2.x to 3.x, standardizing storage on Azure Blob Storage, switching from RabbitMQ to Azure Service Bus, migrating to Azure Database for PostgreSQL, implementing managed identity authentication, adding health checks, containerizing the applications, and preparing them for cloud deployment with proper monitoring.
 
 ## Table of Contents
 
@@ -24,7 +24,7 @@ The modernization will transform your application from the outdated technologies
 ## Overview
 
 The [main](https://github.com/Azure-Samples/java-migration-copilot-samples/tree/main/asset-manager) branch of the asset-manager project is the original state before being migrated to Azure services. It is organized as follows:
-* AWS S3 for image storage, using password-based authentication (access key/secret key)
+* Azure Blob Storage for image storage, using managed identity authentication
 * RabbitMQ for message queuing, using password-based authentication
 * PostgreSQL database for metadata storage, using Azure Managed Identity authentication
 
@@ -56,7 +56,7 @@ WebApp[Web Application]
 Worker[Worker Service]
 
 %% Storage Components
-S3[(AWS S3)]
+Blob[(Azure Blob Storage)]
 LocalFS[("Local File System<br/>dev only")]
 
 %% Message Broker
@@ -77,11 +77,11 @@ User -->|Upload Image| WebApp
 User -->|View Images| WebApp
 
 %% Web App Flows
-WebApp -->|Store Original Image| S3
+WebApp -->|Store Original Image| Blob
 WebApp -->|Store Original Image| LocalFS
 WebApp -->|Send Processing Message| RabbitMQ
 WebApp -->|Store Metadata| PostgreSQL
-WebApp -->|Retrieve Images| S3
+WebApp -->|Retrieve Images| Blob
 WebApp -->|Retrieve Images| LocalFS
 WebApp -->|Retrieve Metadata| PostgreSQL
 
@@ -92,9 +92,9 @@ RetryQueue -->|After 1 min delay| Queue
 Queue -->|Consume Message| Worker
 
 %% Worker Flow
-Worker -->|Download Original| S3
+Worker -->|Download Original| Blob
 Worker -->|Download Original| LocalFS
-Worker -->|Upload Thumbnail| S3
+Worker -->|Upload Thumbnail| Blob
 Worker -->|Upload Thumbnail| LocalFS
 Worker -->|Store Metadata| PostgreSQL
 Worker -->|Retrieve Metadata| PostgreSQL
@@ -108,7 +108,7 @@ classDef queue fill:#fff59d,stroke:#f57f17,color:#f57f17
 classDef user fill:#ef9a9a,stroke:#b71c1c,color:#b71c1c
 
 class WebApp,Worker app
-class S3,LocalFS storage
+class Blob,LocalFS storage
 class RabbitMQ broker
 class PostgreSQL db
 class Queue,RetryQueue queue
@@ -131,7 +131,7 @@ cd java-migration-copilot-samples/asset-manager
 - [Docker](https://docs.docker.com/desktop/): Required for running the application locally.
 
 Run the following commands to start the apps locally. This will:
-* Use the local file system instead of S3 to store images
+* Use the local file system instead of Azure Blob Storage to store images
 * Launch RabbitMQ and PostgreSQL using Docker
 
 Windows:
@@ -224,7 +224,7 @@ Then you can migrate the sample Java application `asset-manager` to Azure.
 
 ### Migrate to Azure Blob Storage using Predefined Tasks
 
-1. Click the **Run Task** in the Assessment Report, on the right of the row `Storage Migration (AWS S3)` - `Migrate from AWS S3 to Azure Blob Storage`.
+1. Click the **Run Task** in the Assessment Report for the storage migration row that migrates storage to Azure Blob Storage.
 1. The following steps are the same as the above PostgreSQL server migration.
 
 ### Migrate to Azure Service Bus using Predefined Tasks

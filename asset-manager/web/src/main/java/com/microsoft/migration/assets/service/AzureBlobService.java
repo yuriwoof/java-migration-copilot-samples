@@ -110,7 +110,7 @@ public class AzureBlobService implements StorageService {
         BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(containerName);
 
         BlobClient blobClient = containerClient.getBlobClient(key);
-        // S3 deleteObject is idempotent for missing keys; keep equivalent behavior.
+        // Keep delete behavior idempotent for missing keys.
         blobClient.deleteIfExists();
 
         try {
