@@ -26,7 +26,7 @@ The modernization will transform your application from the outdated technologies
 The [main](https://github.com/Azure-Samples/java-migration-copilot-samples/tree/main/asset-manager) branch of the asset-manager project is the original state before being migrated to Azure services. It is organized as follows:
 * AWS S3 for image storage, using password-based authentication (access key/secret key)
 * RabbitMQ for message queuing, using password-based authentication
-* PostgreSQL database for metadata storage, using password-based authentication
+* PostgreSQL database for metadata storage, using Azure Managed Identity authentication
 
 In this workshop, you will use the **GitHub Copilot app modernization** extension to assess, upgrade, migrate, and finally deploy the project to Azure.
 
