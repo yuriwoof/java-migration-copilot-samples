@@ -11,11 +11,9 @@ docker run -d --name assets-postgres \
     -e POSTGRES_PASSWORD=postgres \
     -p 5432:5432 postgres:latest
 
-echo "Starting RabbitMQ container..."
-docker run -d --name assets-rabbitmq \
-    -p 5672:5672 \
-    -p 15672:15672 \
-    rabbitmq:management
+if [ -z "$SERVICE_BUS_NAMESPACE" ]; then
+    echo "WARNING: SERVICE_BUS_NAMESPACE is not set. Configure Azure Service Bus environment variables before sending messages."
+fi
 
 echo "Waiting for services to start..."
 sleep 10
@@ -34,4 +32,4 @@ cd "$PROJECT_ROOT/worker" && "$PROJECT_ROOT/mvnw" clean spring-boot:run -Dspring
 
 echo "All services started! Check logs directory for output."
 echo "Web application: http://localhost:8080"
-echo "RabbitMQ Management: http://localhost:15672 (guest/guest)"
+echo "Messaging: Azure Service Bus (configured via SERVICE_BUS_NAMESPACE and Azure credentials)"

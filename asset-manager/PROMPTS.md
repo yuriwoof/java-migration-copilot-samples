@@ -78,10 +78,10 @@ I see the following warning when I compile the top level parent project, please 
 ---
 
 ```
-I need to use a queue in RabbitMQ to connect the web module and the worker module. When an image is uploaded from the web project, a message containing the image properties is sent to the queue. The worker listen to the queue, and when it receives the message properties from the queue, it creates a thumbnail image with width and height no more than 150px, the aspect ratio need to be the same as the original image. The thumbnail is then stored in the same location, local dir or a separate container, with a `_thumbnail` suffix in the file name.
+I need to use a queue in Azure Service Bus to connect the web module and the worker module. When an image is uploaded from the web project, a message containing the image properties is sent to the queue. The worker listen to the queue, and when it receives the message properties from the queue, it creates a thumbnail image with width and height no more than 150px, the aspect ratio need to be the same as the original image. The thumbnail is then stored in the same location, local dir or a separate container, with a `_thumbnail` suffix in the file name.
 ```
 
-Copilot Agent incorrectly adds the dependency version configuration for AMQP in the parent pom's dependencyManagement section, which leads to compilation error. I manually removed it.
+Copilot Agent incorrectly adds the dependency version configuration for the old messaging stack in the parent pom's dependencyManagement section, which leads to compilation error. I manually removed it.
 
 ---
 
@@ -103,9 +103,9 @@ Add Spring Boot data JPA support to the web module. Sync the uploaded image's de
 Add a cmd script for windows and a bash script for Linux in the scripts directory of the parent project root. The two scripts need to have identical flow:
 
 1. Spawn a PostgreSQL server with Docker
-2. Spawn a RabbitMQ server with Docker
-3. Start the web module in `dev` profile, and ensure the configuration for the above PostgreSQL and RabbitMQ is passed to the app through environment variables
-4. Start the worker module in `dev` profile, also properly inject the PostgreSQL and RabbitMQ configurations.
+2. Ensure Azure Service Bus settings are available through environment variables
+3. Start the web module in `dev` profile, and ensure the configuration for PostgreSQL and Azure Service Bus is passed to the app through environment variables
+4. Start the worker module in `dev` profile, also properly inject the PostgreSQL and Azure Service Bus configurations.
 
 The logging output of the two apps needs to be redirected into two separate log files.
 ```
@@ -152,7 +152,7 @@ I don't have ImageMagik installed, so I cannot use it to generate thumbnail. Ple
 ---
 
 ```
-Currently, the RabbitListener will remove the message from the queue regardless whether the message processing is successful or not. Please update the logic so that only when the client successfully processes the message (i.e., the thumbnail is generated correctly) then the message is removed from the queue. Otherwise, the message is available for retry.
+Currently, the Service Bus listener will remove the message from the queue regardless whether the message processing is successful or not. Please update the logic so that only when the client successfully processes the message (i.e., the thumbnail is generated correctly) then the message is removed from the queue. Otherwise, the message is available for retry.
 
 To avoid indefinite retry, when the previous processing failed, the message should only be rerouted after some delay, say 1 minute.
 ```

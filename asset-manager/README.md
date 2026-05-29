@@ -3,7 +3,7 @@
 This document serves as a comprehensive workshop guide that will walk you through the process of migrating a Java application to Azure using GitHub Copilot app modernization. The workshop covers assessment, Java/framework upgrades, migration to Azure services, containerization, and deployment.
 
 **What the modernization Process Will Do:**
-The modernization will transform your application from the outdated technologies to a modern Azure-native solution. This includes upgrading from Java 8 to Java 21, migrating from Spring Boot 2.x to 3.x, standardizing storage on Azure Blob Storage, switching from RabbitMQ to Azure Service Bus, migrating to Azure Database for PostgreSQL, implementing managed identity authentication, adding health checks, containerizing the applications, and preparing them for cloud deployment with proper monitoring.
+The modernization will transform your application from the outdated technologies to a modern Azure-native solution. This includes upgrading from Java 8 to Java 21, migrating from Spring Boot 2.x to 3.x, standardizing storage on Azure Blob Storage, adopting Azure Service Bus for messaging, migrating to Azure Database for PostgreSQL, implementing managed identity authentication, adding health checks, containerizing the applications, and preparing them for cloud deployment with proper monitoring.
 
 ## Table of Contents
 
@@ -25,7 +25,7 @@ The modernization will transform your application from the outdated technologies
 
 The [main](https://github.com/Azure-Samples/java-migration-copilot-samples/tree/main/asset-manager) branch of the asset-manager project is the original state before being migrated to Azure services. It is organized as follows:
 * Azure Blob Storage for image storage, using managed identity authentication
-* RabbitMQ for message queuing, using password-based authentication
+* Azure Service Bus for message queuing, using managed identity authentication
 * PostgreSQL database for metadata storage, using Azure Managed Identity authentication
 
 In this workshop, you will use the **GitHub Copilot app modernization** extension to assess, upgrade, migrate, and finally deploy the project to Azure.
@@ -60,7 +60,7 @@ Blob[(Azure Blob Storage)]
 LocalFS[("Local File System<br/>dev only")]
 
 %% Message Broker
-RabbitMQ(RabbitMQ)
+ServiceBus(Azure Service Bus)
 
 %% Database
 PostgreSQL[(PostgreSQL)]
@@ -79,14 +79,14 @@ User -->|View Images| WebApp
 %% Web App Flows
 WebApp -->|Store Original Image| Blob
 WebApp -->|Store Original Image| LocalFS
-WebApp -->|Send Processing Message| RabbitMQ
+WebApp -->|Send Processing Message| ServiceBus
 WebApp -->|Store Metadata| PostgreSQL
 WebApp -->|Retrieve Images| Blob
 WebApp -->|Retrieve Images| LocalFS
 WebApp -->|Retrieve Metadata| PostgreSQL
 
-%% RabbitMQ Flow
-RabbitMQ -->|Push Message| Queue
+%% Service Bus Flow
+ServiceBus -->|Push Message| Queue
 Queue -->|Processing Failed| RetryQueue
 RetryQueue -->|After 1 min delay| Queue
 Queue -->|Consume Message| Worker
@@ -109,7 +109,7 @@ classDef user fill:#ef9a9a,stroke:#b71c1c,color:#b71c1c
 
 class WebApp,Worker app
 class Blob,LocalFS storage
-class RabbitMQ broker
+class ServiceBus broker
 class PostgreSQL db
 class Queue,RetryQueue queue
 class User user
@@ -132,7 +132,7 @@ cd java-migration-copilot-samples/asset-manager
 
 Run the following commands to start the apps locally. This will:
 * Use the local file system instead of Azure Blob Storage to store images
-* Launch RabbitMQ and PostgreSQL using Docker
+* Launch PostgreSQL using Docker and connect to Azure Service Bus
 
 Windows:
 
@@ -229,7 +229,7 @@ Then you can migrate the sample Java application `asset-manager` to Azure.
 
 ### Migrate to Azure Service Bus using Predefined Tasks
 
-1. Click the **Run Task** in the Assessment Report, on the right of the row `Messaging Service Migration (Spring AMQP RabbitMQ)` - `Migrate from RabbitMQ(AMQP) to Azure Service Bus`.
+1. Click the **Run Task** in the Assessment Report, on the right of the row `Messaging Service Migration to Azure Service Bus`.
 1. The following steps are the same as the above PostgreSQL server migration.
 
 ### Expose health endpoints using Custom Skills
