@@ -39,14 +39,12 @@ public class AzureBlobFileProcessingServiceTest {
     private AzureBlobFileProcessingService azureBlobFileProcessingService;
 
     private final String containerName = "test-container";
-    private final String endpoint = "https://teststorageaccount.blob.core.windows.net";
     private final String testKey = "test-image.jpg";
     private final String thumbnailKey = "test-image_thumbnail.jpg";
 
     @BeforeEach
     void setUp() {
         ReflectionTestUtils.setField(azureBlobFileProcessingService, "containerName", containerName);
-        ReflectionTestUtils.setField(azureBlobFileProcessingService, "endpoint", endpoint);
     }
 
     @Test

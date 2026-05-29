@@ -1,7 +1,6 @@
 package com.microsoft.migration.assets.service;
 
 import com.microsoft.migration.assets.constants.StorageConstants;
-import com.microsoft.migration.assets.model.ImageProcessingMessage;
 import com.microsoft.migration.assets.model.BlobStorageItem;
 import org.springframework.web.multipart.MultipartFile;
 

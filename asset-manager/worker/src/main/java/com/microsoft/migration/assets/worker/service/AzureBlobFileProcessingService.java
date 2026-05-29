@@ -23,9 +23,6 @@ public class AzureBlobFileProcessingService extends AbstractFileProcessingServic
     @Value("${blob.container.name}")
     private String containerName;
 
-    @Value("${blob.storage.endpoint}")
-    private String endpoint;
-
     @Override
     public void downloadOriginal(String key, Path destination) throws Exception {
         BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(containerName);
@@ -62,7 +59,8 @@ public class AzureBlobFileProcessingService extends AbstractFileProcessingServic
 
     @Override
     protected String generateUrl(String key) {
-        return endpoint + "/" + containerName + "/" + key;
+        BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(containerName);
+        return containerClient.getBlobClient(key).getBlobUrl();
     }
 
     private String extractOriginalKey(String key) {

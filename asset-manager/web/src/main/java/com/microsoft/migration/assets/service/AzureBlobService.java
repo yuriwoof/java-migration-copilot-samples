@@ -110,7 +110,8 @@ public class AzureBlobService implements StorageService {
         BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(containerName);
 
         BlobClient blobClient = containerClient.getBlobClient(key);
-        blobClient.delete();
+        // S3 deleteObject is idempotent for missing keys; keep equivalent behavior.
+        blobClient.deleteIfExists();
 
         try {
             // Try to delete thumbnail if it exists
