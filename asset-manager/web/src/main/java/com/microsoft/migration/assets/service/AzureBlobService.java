@@ -11,6 +11,7 @@ import com.microsoft.migration.assets.model.ImageProcessingMessage;
 import com.microsoft.migration.assets.repository.ImageMetadataRepository;
 import lombok.RequiredArgsConstructor;
 import com.azure.spring.messaging.servicebus.core.ServiceBusTemplate;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -84,7 +85,7 @@ public class AzureBlobService implements StorageService {
             getStorageType(),
             file.getSize()
         );
-        serviceBusTemplate.convertAndSend(IMAGE_PROCESSING_QUEUE, message);
+        serviceBusTemplate.send(IMAGE_PROCESSING_QUEUE, new GenericMessage<>(message));
 
         // Create and save metadata to database
         ImageMetadata metadata = new ImageMetadata();
