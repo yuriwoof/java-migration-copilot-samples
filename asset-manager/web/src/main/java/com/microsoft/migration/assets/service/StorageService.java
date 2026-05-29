@@ -2,7 +2,7 @@ package com.microsoft.migration.assets.service;
 
 import com.microsoft.migration.assets.constants.StorageConstants;
 import com.microsoft.migration.assets.model.ImageProcessingMessage;
-import com.microsoft.migration.assets.model.S3StorageItem;
+import com.microsoft.migration.assets.model.BlobStorageItem;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -11,14 +11,14 @@ import java.util.List;
 
 /**
  * Interface for storage operations that can be implemented by different storage providers
- * (AWS S3, local file system, etc.)
+ * (Azure Blob Storage, local file system, etc.)
  */
 public interface StorageService {
     
     /**
      * List all objects in storage
      */
-    List<S3StorageItem> listObjects();
+    List<BlobStorageItem> listObjects();
     
     /**
      * Upload file to storage
@@ -36,7 +36,7 @@ public interface StorageService {
     void deleteObject(String key) throws IOException;
 
     /**
-     * Get the storage type (s3 or local)
+     * Get the storage type (blob or local)
      */
     String getStorageType();
 
