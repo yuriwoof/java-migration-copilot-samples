@@ -1,6 +1,6 @@
 package com.microsoft.migration.assets.worker.config;
 
-import com.azure.identity.DefaultAzureCredentialBuilder;
+import com.azure.core.credential.TokenCredential;
 import com.azure.storage.blob.BlobServiceClient;
 import com.azure.storage.blob.BlobServiceClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,11 +13,17 @@ public class AzureBlobConfig {
     @Value("${blob.storage.endpoint}")
     private String endpoint;
 
+    private final TokenCredential tokenCredential;
+
+    public AzureBlobConfig(TokenCredential tokenCredential) {
+        this.tokenCredential = tokenCredential;
+    }
+
     @Bean
     public BlobServiceClient blobServiceClient() {
         return new BlobServiceClientBuilder()
                 .endpoint(endpoint)
-                .credential(new DefaultAzureCredentialBuilder().build())
+                .credential(tokenCredential)
                 .buildClient();
     }
 }
