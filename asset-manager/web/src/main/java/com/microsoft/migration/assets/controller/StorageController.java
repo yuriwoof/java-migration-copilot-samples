@@ -1,7 +1,7 @@
 package com.microsoft.migration.assets.controller;
 
 import com.microsoft.migration.assets.constants.StorageConstants;
-import com.microsoft.migration.assets.model.S3StorageItem;
+import com.microsoft.migration.assets.model.BlobStorageItem;
 import com.microsoft.migration.assets.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
@@ -22,13 +22,13 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/" + StorageConstants.STORAGE_PATH)
 @RequiredArgsConstructor
-public class S3Controller {
+public class StorageController {
 
     private final StorageService storageService;
 
     @GetMapping
     public String listObjects(Model model) {
-        List<S3StorageItem> objects = storageService.listObjects();
+        List<BlobStorageItem> objects = storageService.listObjects();
         model.addAttribute("objects", objects);
         return "list";
     }
@@ -54,15 +54,14 @@ public class S3Controller {
             return "redirect:/" + StorageConstants.STORAGE_PATH + "/upload";
         }
     }
-    
+
     @GetMapping("/view-page/{key}")
     public String viewObjectPage(@PathVariable String key, Model model, RedirectAttributes redirectAttributes) {
         try {
-            // Find the object in the list of objects
-            Optional<S3StorageItem> foundObject = storageService.listObjects().stream()
+            Optional<BlobStorageItem> foundObject = storageService.listObjects().stream()
                     .filter(obj -> obj.getKey().equals(key))
                     .findFirst();
-            
+
             if (foundObject.isPresent()) {
                 model.addAttribute("object", foundObject.get());
                 return "view";
@@ -80,11 +79,10 @@ public class S3Controller {
     public ResponseEntity<InputStreamResource> viewObject(@PathVariable String key) {
         try {
             InputStream inputStream = storageService.getObject(key);
-            
+
             HttpHeaders headers = new HttpHeaders();
-            // Use a generic content type if we don't know the exact type
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-            
+
             return ResponseEntity.ok()
                     .headers(headers)
                     .body(new InputStreamResource(inputStream));

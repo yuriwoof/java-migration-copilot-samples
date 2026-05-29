@@ -15,8 +15,8 @@ public class ImageMetadata {
     private String filename;
     private String contentType;
     private Long size;
-    private String s3Key;
-    private String s3Url;
+    private String blobName;
+    private String blobUrl;
     private String thumbnailKey;
     private String thumbnailUrl;
     private LocalDateTime uploadedAt;

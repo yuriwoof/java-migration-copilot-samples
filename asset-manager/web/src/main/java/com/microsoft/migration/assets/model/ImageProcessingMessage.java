@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class ImageProcessingMessage {
     private String key;
     private String contentType;
-    private String storageType; // "s3" or "local"
+    private String storageType; // "blob" or "local"
     private long size;
 }
