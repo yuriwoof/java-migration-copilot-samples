@@ -84,9 +84,9 @@ public abstract class AbstractFileProcessingService implements FileProcessor {
                 } else {
                     // Reject the message to trigger dead letter processing
                     if (context != null) {
-                        context.abandon();
+                        context.deadLetter();
                     }
-                    log.debug("Message abandoned and sent to dead letter for delayed retry: {}", message.getKey());
+                    log.debug("Message dead-lettered after processing failure: {}", message.getKey());
                 }
             } catch (Exception e) {
                 log.error("Error handling Service Bus acknowledgment for: {}", message.getKey(), e);
