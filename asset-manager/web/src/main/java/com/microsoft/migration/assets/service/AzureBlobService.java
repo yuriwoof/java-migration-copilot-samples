@@ -102,7 +102,7 @@ public class AzureBlobService implements StorageService {
     public InputStream getObject(String key) throws IOException {
         BlobContainerClient containerClient = blobServiceClient.getBlobContainerClient(containerName);
         BlobClient blobClient = containerClient.getBlobClient(key);
-        return blobClient.downloadStream();
+        return blobClient.openInputStream();
     }
 
     @Override
